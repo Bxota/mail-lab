@@ -1,0 +1,22 @@
+services:
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"   # SMTP (non TLS)
+      - "8025:8025"   # UI http://localhost:8025
+    restart: unless-stopped
+
+  greenmail:
+    image: greenmail/standalone:2.1.2
+    environment:
+      GREENMAIL_OPTS: >
+        -Dgreenmail.smtp.port=3025
+        -Dgreenmail.imap.port=3143
+        -Dgreenmail.hostname=0.0.0.0
+        -Dgreenmail.auth.disabled=false
+        -Dgreenmail.users=test1:pass1@dev.local,test2:pass2@dev.local
+        -Dgreenmail.verbose
+    ports:
+      - "3025:3025"
+      - "3143:3143"
+    restart: unless-stopped
